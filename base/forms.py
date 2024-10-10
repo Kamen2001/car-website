@@ -27,9 +27,7 @@ class SignUpForm(UserCreationForm):
         'placeholder': 'Your email address',
         'class': INPUT_CLASSES
     }))
-    profile_image = forms.ImageField(widget=forms.FileField(attrs={
-        'class': INPUT_CLASSES 
-    }), required=False)
+    profile_image = forms.ImageField(required=False)
 
 
 class LoginForm(AuthenticationForm):
