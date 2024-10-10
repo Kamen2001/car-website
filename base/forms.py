@@ -31,4 +31,13 @@ class SignUpForm(UserCreationForm):
         'class': INPUT_CLASSES 
     }), required=False)
 
-    
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Your username',
+        'class': INPUT_CLASSES
+    }))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'Your password',
+        'class': INPUT_CLASSES
+    }))
