@@ -4,7 +4,7 @@ from .forms import SignUpForm
 from .models import UserProfile
 
 def index(request):
-    return render(request, 'base/index.html')
+    return render(request, 'index.html')
 
 def sign_up(request):
     if request.method == 'POST':
@@ -20,13 +20,13 @@ def sign_up(request):
                 # Създаваме потребителски профил без снимка
                 UserProfile.objects.create(user=user)
             
-            return redirect('base/login/') 
+            return redirect('/login/') 
     else:
         form = SignUpForm()
 
-    return render(request, 'base/sign_up.html', {'form': form})
+    return render(request, 'sign_up.html', {'form': form})
 
 def logout_view(request):  
     logout(request)
     
-    return redirect('index')
+    return redirect('index') 
