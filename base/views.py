@@ -20,7 +20,7 @@ def sign_up(request):
                 # Създаваме потребителски профил без снимка
                 UserProfile.objects.create(user=user)
             
-            return redirect('/login/') 
+            return redirect('base/login/') 
     else:
         form = SignUpForm()
 
