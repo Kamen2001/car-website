@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<h2>Your Profile</h2>
+{% if user_profile.profile_image %}
+    <img src="{{ user_profile.profile_image.url }}" class="rounded-t-xl">
+{% else %}
+    <img src="{% static 'images/default_profile_image.png' %}" class="rounded-t-xl">
+{% endif %}
+    <p>Username: {{ request.user.username }}</p>
+<div class="py-3">
+    <a href="{% url 'edit' username=request.user.username %}" class="px-3 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Edit Profile</a>
+</div>
+{% endblock %}
