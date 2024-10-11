@@ -2,7 +2,11 @@
 {% block title %}Sign Up{% endblock %}
 {% block content %}
 <div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
-    <h1 class="mb-6 text-3xl">Sign up</h1>
+    {% if is_edit %}
+    <h1 class="mb-6 text-3xl">Edit Profile</h1>
+    {% else %}
+    <h1 class="mb-6 text-3xl">Sign Up</h1>
+    {% endif %}
     <form method="post" action="." enctype="multipart/form-data">
         {% csrf_token %}
 

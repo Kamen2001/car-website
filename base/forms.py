@@ -36,3 +36,23 @@ class LoginForm(AuthenticationForm):
         'placeholder': 'Your password',
         'class': INPUT_CLASSES
     }))
+
+class EditUserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2', 'profile_image')
+
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'New username',
+        'class': INPUT_CLASSES
+    }))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'New password',
+        'class': INPUT_CLASSES
+    }))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'Repeat new password',
+        'class': INPUT_CLASSES
+    }))
+
+    profile_image = forms.ImageField(required=False)
