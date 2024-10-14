@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<form method="GET" action=".">
+    <div class="ad-container flex flex-wrap justify-center items-center bg-white p-3 rounded-lg shadow-lg ">
+        {% for field in form %}
+        <div class="ad-details mr-3 px-4 rounded-lg border w-1/5">
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="w-full text-center"> 
+            <button class="mt-2 py-3 px-4 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Search</button>
+        </div>
+    </div>                
+</form>
+{% if ad_filter %}
+<div class="px-3 py-6 bg-gray-100 -xl">
+    <div class="space-y-6 max-w-screen-3xl"> 
+        {% for ad in ad_filter %}
+        <div class="ad-container flex items-start bg-white p-5 rounded-lg shadow-lg ">
+            {% if ad.car_image %}
+            <div class="ad-image mr-6">
+                <img src="{{ ad.car_image.url }}" alt="Car Image" class="max-w-xs rounded-lg">
+            </div>
+            {% else %}
+            <div class="ad-image mr-6">
+                <img src="{% static 'images/no_photo.jpg' %}" alt="Car Image" class="max-w-xs rounded-lg">
+            </div>
+            {% endif %}
+            <div class="ad-details">
+                <a href="{% url 'ad_view' pk=ad.id %}">
+                    <h2 class="text-2xl font-semibold">{{ ad.title }}</h2>
+                    <p class="text-lg ">Price: ${{ ad.price }}</p>
+                    <p class="text-lg ">Year of Manufacture: {{ ad.year }}</p>
+                    <p class="text-lg ">Location: {{ ad.location }}</p>
+
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% else %}
+<h2 class="mb-12 text-2xl text-center">No ads found</h2>
+{% endif %}
+{% endblock %}
