@@ -39,12 +39,16 @@ def logout_view(request):
 
 @login_required
 def profile(request, username):
-    user = request.user  
-    user_profile = get_object_or_404(UserProfile, user=user)
     if request.user.username != username:
 
         return redirect('index')
-    return render(request, 'profile.html', {'user_profile': user_profile})
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    saved_ads = user_profile.saved_ads.all()
+    context={
+        'user_profile': user_profile,
+        'saved_ads': saved_ads
+    }
+    return render(request, 'profile.html', context)
 
 @login_required
 def edit_profile(request, username):

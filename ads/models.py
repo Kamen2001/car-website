@@ -49,7 +49,7 @@ class Ad(models.Model):
     description = models.TextField(blank=True)
     price = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True) 
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=False)
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     location = models.CharField(blank=True, max_length=100)
     car_brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE, related_name='models')
@@ -61,7 +61,8 @@ class Ad(models.Model):
     fuel_type = models.CharField(blank=True, max_length=10, choices=FUEL_TYPE_CHOICES)
     transmission = models.CharField(blank=True, max_length=15, choices=TRANSMISSION_CHOICES)
     car_image = models.ImageField(upload_to='car_images/', blank=True, null=True)
-    
+    saved_by = models.ManyToManyField(UserProfile, related_name='saved_ads', blank=True)
+
     def __str__(self):
         return self.title
     

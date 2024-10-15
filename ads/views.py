@@ -23,9 +23,13 @@ def ad_new(request):
     return render(request, 'ad_form.html', {'form': form})    
 
 def ad_view(request, pk):
+    user_profile = UserProfile.objects.get(user=request.user)
     ad = get_object_or_404(Ad, pk=pk)
-    
-    return render(request, 'ad_view.html', {'ad': ad})
+    context = {
+        'ad': ad,
+        'user_profile': user_profile
+    }
+    return render(request, 'ad_view.html', context)
 
 @login_required
 def ad_edit(request, pk): 
@@ -34,6 +38,7 @@ def ad_edit(request, pk):
         form = NewAdForm(request.POST, request.FILES, instance=ad)
         if form.is_valid():
             ad.ad_status = True
+            ad.updated_at = timezone.now()
             form.save()
             return redirect('ad_view', pk=ad.id)
     else:    
@@ -76,5 +81,17 @@ def ad_publish(request, pk):
     ad = get_object_or_404(Ad, pk=pk, created_by=user_profile)
     ad.is_published = not ad.is_published 
     ad.published_at = timezone.now() if ad.is_published else None
-    ad.save(update_fields=['published_at', 'is_published'])
+    ad.save()
     return redirect('ad_view', pk=ad.pk)
+
+@login_required
+def ad_save(request, pk):
+    user_profile = UserProfile.objects.get(user=request.user)
+    ad = get_object_or_404(Ad, pk=pk)
+    if user_profile in ad.saved_by.all():
+        ad.saved_by.remove(user_profile)
+    else:
+        ad.saved_by.add(user_profile)
+    ad.save()
+    return redirect('ad_view', pk=ad.pk)
+
