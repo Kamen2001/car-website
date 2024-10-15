@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from .models import Ad
 from .form import NewAdForm
 from base.models import UserProfile
@@ -68,3 +69,12 @@ def ad_search(request):
         'ad_filter': ad_filter.qs
     }
     return render(request, 'ad_search_form.html', context)
+
+@login_required
+def ad_publish(request, pk):
+    user_profile = UserProfile.objects.get(user=request.user)
+    ad = get_object_or_404(Ad, pk=pk, created_by=user_profile)
+    ad.is_published = not ad.is_published 
+    ad.published_at = timezone.now() if ad.is_published else None
+    ad.save(update_fields=['published_at', 'is_published'])
+    return redirect('ad_view', pk=ad.pk)

@@ -1,6 +1,7 @@
 from django.db import models
 from base.models import UserProfile
 
+
 class CarBrand(models.Model):
     name = models.CharField(max_length=15)
 
@@ -39,7 +40,10 @@ class Ad(models.Model):
         ('Euro 5', 'Euro 5'),
         ('Euro 6', 'Euro 6'),
     ]
+
     ad_status = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False)
+    published_at = models.DateTimeField(null=True, blank=True)
     title = models.CharField(max_length=20)
     contact_seller = models.PositiveIntegerField()
     description = models.TextField(blank=True)
@@ -60,3 +64,4 @@ class Ad(models.Model):
     
     def __str__(self):
         return self.title
+    

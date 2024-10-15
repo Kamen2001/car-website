@@ -7,6 +7,7 @@ urlpatterns=[
     path('<int:pk>/', views.ad_view, name='ad_view'),
     path('<int:pk>/edit', views.ad_edit, name='ad_edit'),
     path('<int:pk>/delete', views.ad_delete, name='ad_delete'),
+    path('<int:pk>/publish', views.ad_publish, name='ad_publish'),
     path('search/', views.ad_search, name='ad_search_form'),
     
 ]
