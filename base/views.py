@@ -6,7 +6,7 @@ from .models import UserProfile
 from ads.models import Ad
 
 def index(request):
-    latest_ads = Ad.objects.order_by('-created_at')
+    latest_ads = Ad.objects.filter(is_published=True).order_by('-created_at')
     return render(request, 'index.html', {'latest_ads': latest_ads})
 
 def sign_up(request):
