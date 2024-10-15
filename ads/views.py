@@ -95,3 +95,14 @@ def ad_save(request, pk):
     ad.save()
     return redirect('ad_view', pk=ad.pk)
 
+@login_required
+def ad_like(request, pk):
+    user_profile = UserProfile.objects.get(user=request.user)
+    ad = get_object_or_404(Ad, pk=pk)
+    if user_profile in ad.liked_by.all():
+        ad.liked_by.remove(user_profile)
+    else:
+        ad.liked_by.add(user_profile)
+    ad.save()
+    return redirect('ad_view', pk=ad.pk)
+

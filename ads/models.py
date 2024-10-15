@@ -62,6 +62,7 @@ class Ad(models.Model):
     transmission = models.CharField(blank=True, max_length=15, choices=TRANSMISSION_CHOICES)
     car_image = models.ImageField(upload_to='car_images/', blank=True, null=True)
     saved_by = models.ManyToManyField(UserProfile, related_name='saved_ads', blank=True)
+    liked_by = models.ManyToManyField(UserProfile, related_name="likes", blank=True)
 
     def __str__(self):
         return self.title

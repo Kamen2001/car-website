@@ -9,6 +9,7 @@ urlpatterns=[
     path('<int:pk>/delete', views.ad_delete, name='ad_delete'),
     path('<int:pk>/publish', views.ad_publish, name='ad_publish'),
     path('<int:pk>/save', views.ad_save, name='ad_save'),
+    path('<int:pk>/like', views.ad_like, name='ad_like'),
     path('search/', views.ad_search, name='ad_search_form'),
     
 ]
