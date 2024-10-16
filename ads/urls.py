@@ -11,5 +11,6 @@ urlpatterns=[
     path('<int:pk>/save', views.ad_save, name='ad_save'),
     path('<int:pk>/like', views.ad_like, name='ad_like'),
     path('search/', views.ad_search, name='ad_search_form'),
+    path('load-car-models/', views.load_car_models, name='load_car_models')
     
 ]

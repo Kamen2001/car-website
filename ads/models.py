@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from base.models import UserProfile
 
 
@@ -49,7 +50,7 @@ class Ad(models.Model):
     description = models.TextField(blank=True)
     price = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True) 
-    updated_at = models.DateTimeField(auto_now=False)
+    updated_at = models.DateTimeField(auto_now=False, default=timezone.now())
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     location = models.CharField(blank=True, max_length=100)
     car_brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE, related_name='models')

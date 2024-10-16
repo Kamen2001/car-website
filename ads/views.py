@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from .models import Ad
-from .form import NewAdForm
+from .models import Ad, CarModel
+from .forms import NewAdForm
 from base.models import UserProfile
 from .filters import AdFilter
 
@@ -106,3 +106,7 @@ def ad_like(request, pk):
     ad.save()
     return redirect('ad_view', pk=ad.pk)
 
+def load_car_models(request):
+    car_brand_id = request.GET.get('car_brand')
+    car_models = CarModel.objects.filter(brand_id=car_brand_id).order_by('model_name')
+    return render(request, 'partials/car_model_list_options.html', {'car_models': car_models})
