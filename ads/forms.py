@@ -4,15 +4,16 @@ from .models import Ad, CarBrand, CarModel
 INPUT_CLASSES = 'w-ful py-4 px-4 rounded-xl border'
 INPUT_CLASSES_SELECT = 'w-ful px-6 rounded-xl border'
 
+
 class NewAdForm(forms.ModelForm):
     car_brand = forms.ModelChoiceField(queryset=CarBrand.objects.all(), required=True)
 
     class Meta:
         model = Ad 
         fields = [
-            'title', 'car_brand', 'car_model', 'description', 'price', 'car_image', 'horse_power',
+            'title', 'car_brand', 'car_model','price', 'car_image', 'horse_power',
             'year', 'mileage', 'euro_standart', 'fuel_type', 'transmission', 'contact_seller', 
-            'location'
+            'location', 'description', 
         ] 
         widgets = {
             'title': forms.TextInput(attrs={'class': INPUT_CLASSES}),
@@ -34,11 +35,12 @@ class NewAdForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'car_brand' in self.data:
-            try:
-                car_brand_id = int(self.data.get('car_brand'))
+            car_brand_id = self.data.get('car_brand')
+            if car_brand_id:
+                car_brand_id = int(car_brand_id)
                 self.fields['car_model'].queryset = CarModel.objects.filter(brand_id=car_brand_id).order_by('model_name')
-            except (ValueError, TypeError):
-                pass  
         elif self.instance.pk:
-            self.fields['car_model'].queryset = self.instance.car_brand.models.order_by('car_model')
-            self.fields['car_model'].initial = self.instance.car_model
+            self.fields['car_model'].queryset = CarModel.objects.filter(brand_id=self.instance.car_brand.id).order_by('model_name')
+            self.fields['car_model'].initial = self.instance.car_model.pk
+        else:
+            self.fields['car_model'].queryset = CarModel.objects.none()

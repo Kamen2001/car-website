@@ -4,7 +4,6 @@ from .models import Ad, CarBrand, CarModel
 
 
 class AdFilter(django_filters.FilterSet):
-
     car_brand = django_filters.ModelChoiceFilter(
         queryset=CarBrand.objects.all(),
         label="Car Brand",
@@ -15,16 +14,6 @@ class AdFilter(django_filters.FilterSet):
         label="Car Model",
         widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_car_model'})
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'car_brand' in self.data:  
-            try:
-                car_brand_id = int(self.data.get('car_brand'))
-                self.filters['car_model'].queryset = CarModel.objects.filter(brand_id=car_brand_id).order_by('model_name')
-            except (ValueError, TypeError):
-                pass  
-
     sort_by = django_filters.ChoiceFilter(
         choices=[
         ('newest', 'Newest'),
@@ -34,18 +23,29 @@ class AdFilter(django_filters.FilterSet):
         ], 
         label="Sort by",
         method='filter_sort_by',
-        required=False
+        required=False,
+        initial='newest',
+        empty_label=None
     )
-    
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'car_brand' in self.data:  
+            car_brand_id = self.data.get('car_brand')
+            if car_brand_id:
+                car_brand_id = int(car_brand_id)
+                self.filters['car_model'].queryset = CarModel.objects.filter(brand_id=car_brand_id).order_by('model_name')  
+
     def filter_sort_by(self, queryset, name, value):
-        if value == 'price_up':
-            return queryset.order_by('price')  
-        elif value == 'price_down':
-            return queryset.order_by('-price')  
-        elif value == 'newest':
-            return queryset.order_by('-created_at')  
-        elif value == 'oldest':
-            return queryset.order_by('created_at')  
+        match(value):
+            case('price_up'):
+                return queryset.order_by('price')  
+            case('price_down'):
+                return queryset.order_by('-price')  
+            case('newest'):
+                return queryset.order_by('-created_at')  
+            case('oldest'):
+                return queryset.order_by('created_at')  
         return queryset
     
 
@@ -54,10 +54,10 @@ class AdFilter(django_filters.FilterSet):
         fields = {
             'car_brand':['exact'],
             'car_model': ['exact'],
+            'fuel_type': ['exact'],
             'price': ['lt', 'gt'],
             'mileage': ['lt', 'gt'],
             'year': ['lt', 'gt'], 
-            'fuel_type': ['exact'],
             'transmission': ['exact'],
             'horse_power': ['lt', 'gt'],
             'euro_standart': ['exact'],
