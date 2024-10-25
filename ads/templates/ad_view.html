@@ -23,9 +23,26 @@
         <p class="text-gray-500 text-xl"><strong>Fuel Type: </strong>{{ ad.fuel_type }}</p>
         <p class="text-gray-500 text-xl"><strong>Transmission: </strong>{{ ad.transmission }}</p>
         <div class="my-6">   
-            {% if  request.user == ad.created_by.user%}
-                <a href="{% url 'ad_edit' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-200 text-white rounded-xl hover:bg-teal-200">Edit</a>
-                <a href="{% url 'ad_delete' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-200 text-white rounded-xl hover:bg-teal-200">Delete</a>
+            {% if request.user == ad.created_by.user %}
+                {% if ad.is_published %}
+                    <a href="{% url 'ad_publish' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Unpublish</a>
+                {% else %}
+                    <a href="{% url 'ad_publish' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Publish</a>
+                {% endif %}
+                    <a href="{% url 'ad_edit' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Edit</a>
+                    <a href="{% url 'ad_delete' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold  bg-red-500 text-white rounded-xl">Delete</a>
+
+            {% else %}
+                {% if user_profile in ad.saved_by.all %} 
+                    <a href="{% url 'ad_save' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Unsave</a>
+                {% else %}
+                    <a href="{% url 'ad_save' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Save</a>
+                {% endif %}            
+                {% if user_profile in ad.liked_by.all %} 
+                    <a href="{% url 'ad_like' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Unlike</a> {{ ad.liked_by.count }}
+                {% else %}
+                    <a href="{% url 'ad_like' pk=ad.id %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-500">Like</a> {{ ad.liked_by.count }}
+                {% endif %} 
             {% endif %}
         </div> 
     </div>
@@ -40,10 +57,11 @@
     <p class="text-gray-500"><strong>Seller: </strong>{{ ad.created_by.user.username }}</p>
     <p class="text-gray-500"><strong>Contact: </strong>{{ ad.contact_seller }}</p>
     <p class="text-gray-500"><strong>Location: </strong>{{ ad.location }}</p>
+    {% if ad.published_at %}
+        <p class="text-gray-500"><strong>Published at: </strong>{{ ad.published_at }}</p>
+    {% endif %}
     {% if ad.ad_status %}
         <p class="text-gray-500"><strong>Updated at: </strong>{{ ad.updated_at }}</p>
-    {% else %}
-    <p class="text-gray-500"><strong>Created at: </strong>{{ ad.created_at }}</p>
     {% endif %}    
 </div>
 

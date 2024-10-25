@@ -1,0 +1,4 @@
+<option value="">Select a model</option>
+{% for car_model in car_models %}
+    <option value="{{ car_model.id }}">{{ car_model.model_name }}</option>
+{% endfor %}

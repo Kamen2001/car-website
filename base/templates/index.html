@@ -1,5 +1,75 @@
 {% extends 'base.html' %}  
-{% block title %}Welcome{% endblock %}
 {% block content %}
-    <h1 class="text-3xl font-bold">The front page</h1>  
+{% load static %}
+
+<div class="px-3 py-6 bg-gray-100 -xl">
+    {% if latest_ads %}
+    <h1 class="mb-4 text-2xl font-bold">Latest Ads</h1>
+
+    <div class="space-y-6 max-w-screen-3xl"> 
+        {% for ad in latest_ads %}
+        <div class="ad-container flex items-start bg-white p-5 rounded-lg shadow-lg ">
+            {% if ad.car_image %}
+            <div class="ad-image mr-6">
+                <img src="{{ ad.car_image.url }}" alt="Car Image" class="max-w-xs rounded-lg">
+            </div>
+            {% else %}
+            <div class="ad-image mr-6">
+                <img src="{% static 'images/no_photo.jpg' %}" alt="Car Image" class="max-w-xs rounded-lg">
+            </div>
+            {% endif %}
+            <div class="ad-details">
+                <a href="{% url 'ad_view' pk=ad.id %}">
+                    <h2 class="text-2xl font-semibold">{{ ad.title }}</h2>
+                    <p class="text-lg ">{{ ad.car_brand }} {{ ad.car_model }} </p>
+                    <p class="text-lg ">Price: ${{ ad.price }}</p>
+                    <p class="text-lg ">Year of Manufacture: {{ ad.year }}</p>
+                    <p class="text-lg ">Location: {{ ad.location }}</p>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="pagination py-3 flex justify-center items-center ">
+        <span class="step-links flex items-center space-x-2">
+            {% if latest_ads.number == latest_ads.paginator.num_pages %}
+                {% if latest_ads.has_previous %}
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.previous_page_number }}">&laquo;</a>
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span>  
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.previous_page_number }}">{{ latest_ads.previous_page_number }}</a>
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span>
+                    <a class="text-lg border-2 border-teal-500 bg-teal-500 text-white px-3 py-1 rounded" href="?page={{ latest_ads.number }}">{{ latest_ads.number }}</a>
+                {% else %}
+                <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.number }}">{{ latest_ads.number }}</a>
+                {% endif %}
+            {% else %}
+                {% if latest_ads.has_previous %}
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.previous_page_number }}">&laquo;</a>
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.previous_page_number }}">{{ latest_ads.previous_page_number }}</a>
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                {% endif %}
+                <a class="text-lg border-2 border-teal-500 bg-teal-500 text-white px-3 py-1 rounded" href="?page={{ latest_ads.number }}">{{ latest_ads.number }}</a>
+    
+                {% if latest_ads.has_next %}
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                    {% if latest_ads.next_page_number == latest_ads.paginator.num_pages %}
+                        <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.next_page_number }}">{{ latest_ads.next_page_number }}</a>
+                        
+                    {% else %}
+                        <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.next_page_number }}">{{ latest_ads.next_page_number }}</a>
+                        <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                        <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.paginator.num_pages }}">{{ latest_ads.paginator.num_pages }}</a>
+                    {% endif %}
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ latest_ads.next_page_number }}">&raquo;</a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+    
+    {% else %}
+    <h2 class="mb-12 text-2xl text-center">There are no ads</h2>
+    {% endif %}
+</div>
 {% endblock %}

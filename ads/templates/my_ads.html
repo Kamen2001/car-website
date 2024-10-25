@@ -19,16 +19,16 @@
             <div class="ad-details">
                 <a href="{% url 'ad_view' pk=ad.id %}">
                     <h2 class="text-2xl font-semibold">{{ ad.title }}</h2>
+                    <p class="text-lg ">{{ ad.car_brand }} {{ ad.car_model }}</p>
                     <p class="text-lg ">Price: ${{ ad.price }}</p>
                     <p class="text-lg ">Year of Manufacture: {{ ad.year }}</p>
                     <p class="text-lg ">Location: {{ ad.location }}</p>
-
                 </a>
             </div>
         </div>
         {% endfor %}
     </div>
 {% else %}
-    <h1 class="mb-12 text-2xl text-center">You have no ads</h1>
+    <h1 class="mb-12 text-2xl text-center">You have no saved ads</h1>
 {% endif %}
 {% endblock %}

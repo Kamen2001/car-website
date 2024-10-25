@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
+
+<script type="text/javascript"> var loadCarModelsUrl = "{% url 'load_car_models' %}" </script>
+<script src="{% static 'js/custom_search.js' %}"></script>
+
 {% if editing %}
-<h1 class="mb-6 text-3xl">Edit Ad:</h1>
-<form method="post" action="{% url 'ad_edit' ad.id %}" enctype="multipart/form-data" >
+<form method="post" action="{% url 'ad_edit' ad.id %}" enctype="multipart/form-data" class="flex flex-col items-center">
+    <h1 class="border-b-4 border-gray-300 mb-6 text-4xl px-40 font-bold inline-block">Edit Ad</h1>
     {% csrf_token %}
     <div class="form-container">
             <div class="table-container">
-                <table >
+                <table>
                     {% for field in form %}
                         <tr>
                             <td>{{ field.label_tag }}</td>
@@ -16,16 +20,16 @@
                     {% endfor %}
                 </table>
             </div>
-        <button class="mt-6 py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+        <button class="mt-6 py-4 px-8 text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white rounded-xl">Submit</button>
     </div>
 </form>
 {% else %}
-<h1 class="mb-6 text-3xl">New Ad</h1>
-<form method="post" action="." enctype="multipart/form-data" >
+<form method="post" action="." enctype="multipart/form-data" class="flex flex-col items-center">
+    <h1 class="border-b-4 border-gray-300 mb-6 text-4xl px-40 font-bold inline-block">New Ad</h1>
     {% csrf_token %}
     <div class="form-container">
             <div class="table-container">
-                <table >
+                <table>
                     {% for field in form %}
                         <tr>
                             <td>{{ field.label_tag }}</td>
@@ -34,9 +38,16 @@
                     {% endfor %}
                 </table>
             </div>
-        <button class="mt-6 py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+        <button class="mt-6 py-4 px-8 text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white rounded-xl">Submit</button>
     </div>
 </form>
-
 {% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+    $("#id_car_brand").select2();
+</script>
+<script>
+    $("#id_car_model").select2();
+</script>
 {% endblock %}

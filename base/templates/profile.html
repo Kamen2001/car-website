@@ -1,15 +1,46 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Profile{% endblock %}
 {% block content %}
-<h2>Your Profile</h2>
-{% if user_profile.profile_image %}
-    <img src="{{ user_profile.profile_image.url }}" class="rounded-t-xl">
+
+<div class="block w-60 h-60 rounded-full overflow-hidden">{% if user_profile.profile_image %}
+    <img src="{{ user_profile.profile_image.url }}" class="block border-2 border-black w-full h-full object-cover rounded-full">
 {% else %}
-    <img src="{% static 'images/default_profile_image.png' %}" class="rounded-t-xl">
+    <img src="{% static 'images/default_profile_image.png' %}" class="block h-80 w-80 object-cover rounded-full">
 {% endif %}
-    <p>Username: {{ request.user.username }}</p>
-<div class="py-3">
+</div>
+<div class="py-2">
+    <p class="py-3 font-bold ">Username: {{ request.user.username }}</p>
     <a href="{% url 'edit' username=request.user.username %}" class="px-3 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Edit Profile</a>
+</div>
+<div class="px-3 py-6 bg-gray-100 -xl">
+    {% if saved_ads %}
+    <h1 class="mb-4 text-2xl">Saved Ads</h1>
+    <div class="space-y-6 max-w-screen-3xl"> 
+        {% for ad in saved_ads %}
+        <div class="ad-container flex items-start bg-white p-5 rounded-lg shadow-lg ">
+            {% if ad.car_image %}
+            <div class="ad-image mr-6">
+                <img src="{{ ad.car_image.url }}" alt="Car Image" class="max-w-xs rounded-lg">
+            </div>
+            {% else %}
+            <div class="ad-image mr-6">
+                <img src="{% static 'images/no_photo.jpg' %}" alt="Car Image" class="max-w-xs rounded-lg">
+            </div>
+            {% endif %}
+            <div class="ad-details">
+                <a href="{% url 'ad_view' pk=ad.id %}">
+                    <h2 class="text-2xl font-semibold">{{ ad.title }}</h2>
+                    <p class="text-lg ">{{ ad.car_brand }} {{ ad.car_model }}</p>
+                    <p class="text-lg ">Price: ${{ ad.price }}</p>
+                    <p class="text-lg ">Year of Manufacture: {{ ad.year }}</p>
+                    <p class="text-lg ">Location: {{ ad.location }}</p>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <h2 class="mb-12 text-2xl text-center">You haveno saved ads.</h2>
+    {% endif %}
 </div>
 {% endblock %}

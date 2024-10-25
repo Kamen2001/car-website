@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
-
 {% load static %}
 {% block content %}
+
+<script type="text/javascript"> var loadCarModelsUrl = "{% url 'load_car_models' %}" </script>
+<script src="{% static 'js/custom_search.js' %}"></script>
+
 <form method="GET" action=".">
-    <div class="ad-container flex flex-wrap justify-center items-center bg-white p-3 rounded-lg shadow-lg ">
+    <div class="ad-container flex flex-wrap justify-center items-center bg-white p-4 rounded-lg shadow-lg ">
         {% for field in form %}
-        <div class="ad-details mr-3 px-4 rounded-lg border w-1/5">
+        <div class="ad-details mr-1 px-1 py-2 font-semibold rounded-lg border w-50">
             {{ field.label_tag }}
             {{ field }}
         </div>
         {% endfor %}
         <div class="w-full text-center"> 
             <button class="mt-2 py-3 px-4 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Search</button>
+            <a href="{% url 'ad_search_form' %}" class="mt-2 py-3 px-4 text-lg bg-red-500 rounded-xl text-white">Clear Filters</a>
         </div>
     </div>                
 </form>
@@ -19,30 +23,74 @@
 <div class="px-3 py-6 bg-gray-100 -xl">
     <div class="space-y-6 max-w-screen-3xl"> 
         {% for ad in ad_filter %}
-        <div class="ad-container flex items-start bg-white p-5 rounded-lg shadow-lg ">
-            {% if ad.car_image %}
-            <div class="ad-image mr-6">
-                <img src="{{ ad.car_image.url }}" alt="Car Image" class="max-w-xs rounded-lg">
+            <div class="ad-container flex items-start bg-white p-5 rounded-lg shadow-lg ">
+                {% if ad.car_image %}
+                    <div class="ad-image mr-6">
+                        <img src="{{ ad.car_image.url }}" alt="Car Image" class="max-w-xs rounded-lg">
+                    </div>
+                {% else %}
+                    <div class="ad-image mr-6">
+                        <img src="{% static 'images/no_photo.jpg' %}" alt="Car Image" class="max-w-xs rounded-lg">
+                    </div>
+                {% endif %}
+                <div class="ad-details">
+                    <a href="{% url 'ad_view' pk=ad.id %}">
+                        <h2 class="text-2xl font-semibold">{{ ad.title }}</h2>
+                        <p class="text-lg ">{{ ad.car_brand }} {{ ad.car_model }}</p>
+                        <p class="text-lg ">Price: ${{ ad.price }}</p>
+                        <p class="text-lg ">Year of Manufacture: {{ ad.year }}</p>
+                        <p class="text-lg ">Location: {{ ad.location }}</p>
+                    </a>
+                </div>
             </div>
-            {% else %}
-            <div class="ad-image mr-6">
-                <img src="{% static 'images/no_photo.jpg' %}" alt="Car Image" class="max-w-xs rounded-lg">
-            </div>
-            {% endif %}
-            <div class="ad-details">
-                <a href="{% url 'ad_view' pk=ad.id %}">
-                    <h2 class="text-2xl font-semibold">{{ ad.title }}</h2>
-                    <p class="text-lg ">Price: ${{ ad.price }}</p>
-                    <p class="text-lg ">Year of Manufacture: {{ ad.year }}</p>
-                    <p class="text-lg ">Location: {{ ad.location }}</p>
-
-                </a>
-            </div>
-        </div>
         {% endfor %}
     </div>
-
+</div>
+<div class="pagination py-3 flex justify-center items-center ">
+    <span class="step-links flex items-center space-x-2">
+        {% if ad_filter.number == ad_filter.paginator.num_pages %}
+            {% if ad_filter.has_previous %}
+                <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.previous_page_number }}&{{ query_params }}">&laquo;</a>
+                <span class="text-lg border-l-2 border-teal-500 h-6"></span>
+                <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.previous_page_number }}&{{ query_params }}">{{ ad_filter.previous_page_number }}</a>
+                <span class="text-lg border-l-2 border-teal-500 h-6"></span>
+                <a class="text-lg border-2 border-teal-500 bg-teal-500 text-white px-3 py-1 rounded" href="?page={{ ad_filter.number }}&{{ query_params }}">{{ ad_filter.number }}</a>
+            {% else %}
+                <a class="text-lg  border-2 border-teal-500 bg-teal-500 text-white px-3 py-1 rounded" href="?page={{ ad_filter.number }}&{{ query_params }}">{{ ad_filter.number }}</a>
+            {% endif %}
+        {% else %}
+            {% if ad_filter.has_previous %}
+                <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.previous_page_number }}&{{ query_params }}">&laquo;</a>
+                <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.previous_page_number }}&{{ query_params }}">{{ ad_filter.previous_page_number }}</a>
+                <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+            {% endif %}
+            <a class="text-lg border-2 border-teal-500 bg-teal-500 text-white px-3 py-1 rounded" href="?page={{ ad_filter.number }}&{{ query_params }}">{{ ad_filter.number }}</a>
+            {% if ad_filter.has_next %}
+                <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                {% if ad_filter.next_page_number == ad_filter.paginator.num_pages %}
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.next_page_number }}&{{ query_params }}">{{ ad_filter.next_page_number }}</a>
+                    
+                {% else %}
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.next_page_number }}&{{ query_params }}">{{ ad_filter.next_page_number }}</a>
+                    <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                    <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.paginator.num_pages }}&{{ query_params }}">{{ ad_filter.paginator.num_pages }}</a>
+                {% endif %}
+                <span class="text-lg border-l-2 border-teal-500 h-6"></span> 
+                <a class="text-lg border-2 border-teal-500 text-teal-500 hover:bg-teal-700 hover:text-white px-3 py-1 rounded" href="?page={{ ad_filter.next_page_number }}&{{ query_params }}">&raquo;</a>
+            {% endif %}
+        {% endif %}
+    </span>
+</div>
 {% else %}
 <h2 class="mb-12 text-2xl text-center">No ads found</h2>
 {% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+    $("#id_car_brand").select2();
+</script>
+<script>
+    $("#id_car_model").select2();
+</script>
 {% endblock %}
