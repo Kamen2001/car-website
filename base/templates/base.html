@@ -7,12 +7,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <title>My Website</title>
+        <title>AutomobilesForSale.com</title>
     </head>
     <body>
         {% load static %}
         <nav class="py-6 px-2 flex justify-between items-center border-b border-gray-200">
-            <h1 class="logo" style="font-size: 2em; font-weight: bold;">My Website</h1>
+            <h1 class="logo" style="font-size: 2em; font-weight: bold;">AutomobilesForSale</h1>
             <div class="ml-auto flex items-center space-x-4 ">
                 <a href="{% url 'index' %}" class="text-2xl font-semibold hover:text-gray-500">Home</a>
                 <a href="{% url 'ad_search_form' %}" class="text-2xl font-semibold hover:text-gray-500">Search</a>
@@ -21,9 +21,9 @@
                     <div class="relative inline-block text-left">
                         <button id="dropdownButton" class="inline-flex items-center rounded-xl font-semibold px-6 py-2.5 border-2 border-teal-500 text-lg text-teal-500 hover:bg-teal-700 hover:text-white focus:outline-none">
                             {% if request.user.userprofile.profile_image %}
-                            <img src="{{ request.user.userprofile.profile_image.url }}" class="block w-8 h-8 object-cover rounded-full">
+                                <img src="{{ request.user.userprofile.profile_image.url }}" class="block w-8 h-8 object-cover rounded-full">
                             {% else %}
-                            <img src="{% static 'images/default_profile_image.png' %}" class="block w-8 h-8 object-cover rounded-full " >
+                                <img src="{% static 'images/default_profile_image.png' %}" class="block w-8 h-8 object-cover rounded-full " >
                             {% endif %}
                             <span class="ml-2">{{ request.user.username }}</span>
 
@@ -54,22 +54,18 @@
             {% block scripts %}
             {% endblock %}
             <script>
-            const dropdownButton = document.getElementById('dropdownButton');
-            const dropdownMenu = document.getElementById('dropdownMenu');
+                const dropdownButton = document.getElementById('dropdownButton');
+                const dropdownMenu = document.getElementById('dropdownMenu');
 
-            dropdownButton.addEventListener('click', function() {
-                dropdownMenu.classList.toggle('hidden');  // Показва/скрива менюто при клик
-            });
-
-            // Скрива менюто, ако кликнеш извън него
-            window.addEventListener('click', function(e) {
-                if (!dropdownButton.contains(e.target)) {
-                    dropdownMenu.classList.add('hidden');
-                }
-            });
+                dropdownButton.addEventListener('click', function() {
+                    dropdownMenu.classList.toggle('hidden');  
+                });
+                window.addEventListener('click', function(e) {
+                    if (!dropdownButton.contains(e.target)) {
+                        dropdownMenu.classList.add('hidden');
+                    }
+                });
             </script>
-        
         </main>
-            
     </body>
 </html>
