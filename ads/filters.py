@@ -1,5 +1,6 @@
 import django_filters
 from django import forms
+from django.db.models import Count
 from .models import Ad, CarBrand, CarModel
 
 
@@ -20,6 +21,7 @@ class AdFilter(django_filters.FilterSet):
         ('oldest', 'Oldest'),
         ('price_up', 'Price: Low to High'),
         ('price_down', 'Price: High to Low'),
+        ('most_liked', 'Most liked')
         ], 
         label="Sort by",
         method='filter_sort_by',
@@ -45,7 +47,9 @@ class AdFilter(django_filters.FilterSet):
             case('newest'):
                 return queryset.order_by('-created_at')  
             case('oldest'):
-                return queryset.order_by('created_at')  
+                return queryset.order_by('created_at')
+            case('most_liked'):
+                return queryset.annotate(num_likes=Count('liked_by')).order_by('-num_likes')  
         return queryset
     
 
